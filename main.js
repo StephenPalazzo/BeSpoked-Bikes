@@ -5,11 +5,11 @@ import { Customer } from './Entities/Customer.js';
 import { Sale } from './Entities/Sale.js';
 import { Discount } from './Entities/Discount.js';
 
-// "Database"
+// "Database" of entities
 const products = [
   new Product('Turbo I', 'Top Bikez', 'Touring', 2000, 2300, 10, 6),
   new Product('Turbo II', 'Top Bikez', 'Touring', 4000, 4300, 5, 12),
-  new Product('Trickz', '', 'BMX', 1000, 1200, 20, 5),
+  new Product('Trickz', 'MoreBikes', 'BMX', 1000, 1200, 20, 5),
 ];
 
 const salespersons = [
@@ -76,7 +76,7 @@ const discounts = [
   new Discount(products[0], new Date(2022, 1, 10), new Date(2022, 1, 15), 20),
 ];
 
-// Accessing lists
+// Accessing data lists
 function getSalesperson(salespersonID) {
   for (let i = 0; i < salespersons.length; i++) {
     if (salespersons[i].salespersonID == salespersonID) {
@@ -107,6 +107,38 @@ function getCustomer(customerID) {
   return null;
 }
 
+function addProduct(product) {
+  for (let i = 0; i < products.length; i++) {
+    if (
+      products[i].name === product.name &&
+      products[i].manufacturer === product.manufacturer &&
+      products[i].style === product.style
+    ) {
+      return;
+    }
+
+    products.push(product);
+  }
+
+  return null;
+}
+
+function addSalesperson(salesperson) {
+  for (let i = 0; i < salespersons.length; i++) {
+    if (
+      salespersons[i].firstName === salesperson.firstName &&
+      salespersons[i].lastName === salesperson.lastName &&
+      salespersons[i].address === salesperson.address
+    ) {
+      return;
+    }
+
+    salespersons.push(salesperson);
+  }
+
+  return null;
+}
+
 // List rendering functions
 function renderSaleList() {
   const salesList = document.getElementById('sales');
@@ -130,7 +162,7 @@ function renderSaleList() {
     customerLabel.textContent =
       'Customer: ' +
       sales[i].customer.lastName +
-      ' ' +
+      ', ' +
       sales[i].customer.firstName;
     const saleDateLabel = document.createElement('label');
     saleDateLabel.textContent =
@@ -156,7 +188,7 @@ function renderProductList() {
     newRow.className = 'card card-body';
 
     const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+    deleteBtn.className = 'btn btn-success delete';
     deleteBtn.appendChild(document.createTextNode('Edit'));
 
     const productLabel = document.createElement('label');
@@ -199,7 +231,7 @@ function renderCustomerList() {
     newRow.className = 'card card-body';
 
     const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+    deleteBtn.className = 'btn btn-success delete';
     deleteBtn.appendChild(document.createTextNode('Edit'));
 
     const nameLabel = document.createElement('label');
@@ -236,7 +268,7 @@ function renderSalespersonList() {
     newRow.className = 'card card-body';
 
     const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+    deleteBtn.className = 'btn btn-success delete';
     deleteBtn.appendChild(document.createTextNode('Edit'));
 
     const nameLabel = document.createElement('label');
@@ -253,7 +285,7 @@ function renderSalespersonList() {
     terminateDateLabel.textContent =
       'Terminate Date: ' +
       (salespersons[i].terminationDate === null
-        ? '----'
+        ? 'Still Employed'
         : salespersons[i].terminationDate.toLocaleDateString());
     const managerLabel = document.createElement('label');
     managerLabel.textContent = 'Manager: ' + salespersons[i].manager;
@@ -326,7 +358,7 @@ form.addEventListener('submit', (e) => {
   customerLabel.textContent =
     'Customer: ' +
     customers[customerID].lastName +
-    ' ' +
+    ', ' +
     customers[customerID].firstName;
   const saleDateLabel = document.createElement('label');
   saleDateLabel.textContent =
